@@ -18,7 +18,7 @@ O servidor Flask expõe os seguintes endpoints para gerenciamento do calendário
 * **Linguagem:** Python 3.x
 * **Back-end:** Flask (API REST)
 * **Front-end:** PyQt (Interface Gráfica Desktop)
-* **Design Patterns:** [Listar os padrões utilizados, ex: MVC, Singleton, Factory]
+* **Design Patterns:** [Singleton, Observer, Command, Proxy]
 
 ## 🏗️ Arquitetura e Design Patterns
 
@@ -35,8 +35,9 @@ Este projeto foi desenvolvido aplicando padrões de projeto (Design Patterns) pa
 ## 👨‍💻 Equipe
 
 | Membro | GitHub |
-| --- | --- |
 | Natan Xavier | @Natan-Xavier |
 | Pier Giorgio | @Pier-Cesar |
 | Guilherme Gomes | @Gomes-007 |
 | Haissa Mota | @hfontesdamota |
+| Paulo Alberto | @uepaullo |
+
