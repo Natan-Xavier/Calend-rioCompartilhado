@@ -15,7 +15,7 @@ O servidor Flask expõe os seguintes endpoints para gerenciamento do calendário
 
 ## 🛠️ Tecnologias e Ferramentas
 
-* **Linguagem:** Python 3.x
+* **Linguagem:** Python 3.13
 * **Back-end:** Flask (API REST)
 * **Front-end:** PyQt (Interface Gráfica Desktop)
 * **Design Patterns:** [Singleton, Observer, Command, Proxy]
