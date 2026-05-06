@@ -1,0 +1,24 @@
+name: Server Tests
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: pip install flask pytest requests
+
+      - name: Run pytest
+        run: pytest tests/test_endpoints.py -v
+
+      - name: Run endpoint output tests
+        run: python tests/run_tests.py
