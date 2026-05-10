@@ -1,5 +1,4 @@
 from client.calendar_proxy import CalendarProxy
-from client.commands.create_user import CreateUserCmd
 from client.commands.create_event import CreateEventCmd
 from client.commands.create_reminder import CreateReminderCmd
 from client.commands.add_task import AddTaskCmd
@@ -18,20 +17,18 @@ class CLIView:
             "4": CreateReminderCmd(self.proxy),
             "5": EditItemCmd(self.proxy),
             "6": DeleteItemCmd(self.proxy),
-            "7": CreateUserCmd(self.proxy),
         }
 
     def show_menu(self):
         print("\n" + "="*45)
         print("          📅 SharedCalendar")
         print("="*45)
-        print("  1. Ver agenda (por intervalo de datas)")
+        print("  1. Ver agenda")
         print("  2. Criar evento")
         print("  3. Criar tarefa")
         print("  4. Criar lembrete")
         print("  5. Editar item")
         print("  6. Deletar item")
-        print("  7. Criar usuário")
         print("  0. Sair")
         print("="*45)
 

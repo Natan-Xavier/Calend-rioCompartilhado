@@ -1,1 +1,32 @@
-{}
+{
+  "07a37087-6592-4fb5-b38a-d7df622c306f": {
+    "id": "07a37087-6592-4fb5-b38a-d7df622c306f",
+    "title": "Reunião Semanal",
+    "date": "2026-05-15",
+    "description": "Reunião do time"
+  },
+  "5e8de926-0ea8-484a-a476-8dee85d34e4f": {
+    "id": "5e8de926-0ea8-484a-a476-8dee85d34e4f",
+    "title": "Evento Editável",
+    "date": "2026-05-16",
+    "description": "Atualizado"
+  },
+  "1b2e4086-5598-4c84-b9f9-ffdc9e335ad2": {
+    "id": "1b2e4086-5598-4c84-b9f9-ffdc9e335ad2",
+    "title": "Feira de Carreiras",
+    "date": "2026-06-10",
+    "description": "Evento anual"
+  },
+  "beac22bb-4fcf-4468-b238-2c1e8c0dbc74": {
+    "id": "beac22bb-4fcf-4468-b238-2c1e8c0dbc74",
+    "title": "Evento Z",
+    "date": "2026-07-20",
+    "description": "Último"
+  },
+  "7f9e77c9-c776-4f17-b09a-7d17b1b70540": {
+    "id": "7f9e77c9-c776-4f17-b09a-7d17b1b70540",
+    "title": "Evento A",
+    "date": "2026-07-05",
+    "description": "Primeiro"
+  }
+}

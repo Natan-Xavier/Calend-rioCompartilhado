@@ -4,5 +4,29 @@
     "title": "Estudar Teoria dos Grafos",
     "description": "Estudar pra prox prova",
     "done": false
+  },
+  "e65bfb5b-3600-4cf8-8f20-3f2244859188": {
+    "id": "e65bfb5b-3600-4cf8-8f20-3f2244859188",
+    "title": "Finalizar relatório",
+    "description": "Relatório Q2",
+    "done": false
+  },
+  "b3c18124-9a44-4fa7-91d8-1745681d410e": {
+    "id": "b3c18124-9a44-4fa7-91d8-1745681d410e",
+    "title": "Tarefa Listável",
+    "description": "Para listar",
+    "done": false
+  },
+  "47e1f17b-faec-4d3e-96cf-2d89839cf559": {
+    "id": "47e1f17b-faec-4d3e-96cf-2d89839cf559",
+    "title": "Tarefa Editável",
+    "description": "Atualizada",
+    "done": false
+  },
+  "1bf2c9db-103f-41c3-8635-95d78b5119d8": {
+    "id": "1bf2c9db-103f-41c3-8635-95d78b5119d8",
+    "title": "Entregar projeto",
+    "description": "Projeto final",
+    "done": false
   }
 }

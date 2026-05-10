@@ -15,10 +15,13 @@ jobs:
           python-version: '3.13'
 
       - name: Install dependencies
-        run: pip install flask pytest requests
+        run: pip install flask pytest requests pyqt5
 
       - name: Run pytest
         run: pytest tests/test_endpoints.py -v
+
+      - name: Run integration tests
+        run: pytest tests/test_integration.py -v
 
       - name: Run endpoint output tests
         run: python tests/run_tests.py
