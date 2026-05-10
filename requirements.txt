@@ -1,3 +1,4 @@
 flask
 pytest
 pyqt5
+requests
