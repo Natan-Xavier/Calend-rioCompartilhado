@@ -14,9 +14,12 @@ class CalendarService:
             "email": data.get("email")
         }
         self.storage.save("users", user_id, user)
-        return user
+        return user, None
 
     def create_event(self, data):
+        existing, _ = self.storage.find_by_name_global(data.get("title", ""))
+        if existing:
+            return None, "conflict"
         event_id = str(uuid.uuid4())
         event = {
             "id": event_id,
@@ -25,7 +28,7 @@ class CalendarService:
             "description": data.get("description")
         }
         self.storage.save("events", event_id, event)
-        return event
+        return event, None
 
     def edit_event(self, name, data):
         event = self.storage.find_by_name("events", name)
@@ -43,6 +46,9 @@ class CalendarService:
         return {"deleted": name}
 
     def create_reminder(self, data):
+        existing, _ = self.storage.find_by_name_global(data.get("title", ""))
+        if existing:
+            return None, "conflict"
         reminder_id = str(uuid.uuid4())
         reminder = {
             "id": reminder_id,
@@ -50,7 +56,7 @@ class CalendarService:
             "datetime": data.get("datetime")
         }
         self.storage.save("reminders", reminder_id, reminder)
-        return reminder
+        return reminder, None
 
     def edit_reminder(self, name, data):
         reminder = self.storage.find_by_name("reminders", name)

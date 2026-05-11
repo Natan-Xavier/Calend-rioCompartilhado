@@ -7,15 +7,19 @@ class TaskService:
         self.storage = StorageManager.get_instance()
 
     def add(self, data):
+        existing, _ = self.storage.find_by_name_global(data.get("title", ""))
+        if existing:
+            return None, "conflict"
         task_id = str(uuid.uuid4())
         task = {
             "id": task_id,
             "title": data.get("title"),
             "description": data.get("description"),
+            "date": data.get("date"),
             "done": False
         }
         self.storage.save("tasks", task_id, task)
-        return task
+        return task, None
 
     def get_all(self):
         return self.storage.load_all("tasks")
@@ -24,7 +28,7 @@ class TaskService:
         return self.storage.load_by_interval("tasks", start, end)
 
     def edit(self, name, data):
-        task = self.storage.find_by_name("tasks", name)
+        task = self.storage.find_by_name_global(name)[0]
         if not task:
             return None
         updated = {**task, **data, "id": task["id"]}
@@ -32,7 +36,7 @@ class TaskService:
         return updated
 
     def delete(self, name):
-        task = self.storage.find_by_name("tasks", name)
+        task, _ = self.storage.find_by_name_global(name)
         if not task:
             return None
         self.storage.delete("tasks", task["id"])

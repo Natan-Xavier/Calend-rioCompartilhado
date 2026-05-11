@@ -21,6 +21,12 @@ class CalendarProxy:
             print("❌ Erro: servidor não está rodando!")
             return None, 503
 
+    def find_by_name(self, name):
+        data, status = self._request("GET", f"/find/{name}")
+        if status == 200:
+            return data.get("item"), data.get("resource")
+        return None, None
+
     # ── /usuarios ──────────────────────────────────────
     def create_user(self, name, email):
         return self._request("POST", "/usuarios", {"name": name, "email": email})
@@ -50,9 +56,11 @@ class CalendarProxy:
         return self._request("DELETE", f"/lembretes/{name}")
 
     # ── /tarefas ───────────────────────────────────────
-    def add_task(self, title, description):
+    def add_task(self, title, description, date):
         return self._request("POST", "/tarefas", {
-            "title": title, "description": description
+            "title": title,
+            "description": description,
+            "date": date
         })
 
     def edit_task(self, name, data):
@@ -67,3 +75,4 @@ class CalendarProxy:
     # ── /agenda ────────────────────────────────────────
     def get_agenda(self, start, end):
         return self._request("GET", "/agenda", params={"start": start, "end": end})
+

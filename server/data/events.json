@@ -1,32 +1,38 @@
 {
-  "07a37087-6592-4fb5-b38a-d7df622c306f": {
-    "id": "07a37087-6592-4fb5-b38a-d7df622c306f",
-    "title": "Reunião Semanal",
-    "date": "2026-05-15",
-    "description": "Reunião do time"
-  },
-  "5e8de926-0ea8-484a-a476-8dee85d34e4f": {
-    "id": "5e8de926-0ea8-484a-a476-8dee85d34e4f",
-    "title": "Evento Editável",
-    "date": "2026-05-16",
-    "description": "Atualizado"
-  },
-  "1b2e4086-5598-4c84-b9f9-ffdc9e335ad2": {
-    "id": "1b2e4086-5598-4c84-b9f9-ffdc9e335ad2",
+  "1116b4e8-7728-4274-8747-39d517af82b2": {
+    "id": "1116b4e8-7728-4274-8747-39d517af82b2",
     "title": "Feira de Carreiras",
-    "date": "2026-06-10",
-    "description": "Evento anual"
+    "date": "2026-05-20",
+    "description": "Evento anual de recrutamento"
   },
-  "beac22bb-4fcf-4468-b238-2c1e8c0dbc74": {
-    "id": "beac22bb-4fcf-4468-b238-2c1e8c0dbc74",
-    "title": "Evento Z",
-    "date": "2026-07-20",
-    "description": "Último"
+  "a19cd206-b53c-4fca-99e0-30d20ab1ea5c": {
+    "id": "a19cd206-b53c-4fca-99e0-30d20ab1ea5c",
+    "title": "Reunião de Planejamento",
+    "date": "2026-05-22",
+    "description": "Planejamento do próximo sprint"
   },
-  "7f9e77c9-c776-4f17-b09a-7d17b1b70540": {
-    "id": "7f9e77c9-c776-4f17-b09a-7d17b1b70540",
-    "title": "Evento A",
-    "date": "2026-07-05",
-    "description": "Primeiro"
+  "d4775269-854d-4ca5-868e-d7e1aee9327c": {
+    "id": "d4775269-854d-4ca5-868e-d7e1aee9327c",
+    "title": "Apresentação do Projeto",
+    "date": "2026-05-26",
+    "description": "Entrega final da disciplina"
+  },
+  "9ebaa298-80a6-4c77-aa64-80ec7890a907": {
+    "id": "9ebaa298-80a6-4c77-aa64-80ec7890a907",
+    "title": "Hackathon FIAP",
+    "date": "2026-06-05",
+    "description": "Maratona de programação"
+  },
+  "bcea090b-e681-4493-a383-c0c68d8d45b8": {
+    "id": "bcea090b-e681-4493-a383-c0c68d8d45b8",
+    "title": "Defesa de TCC",
+    "date": "2026-06-15",
+    "description": "Apresentação do trabalho de conclusão"
+  },
+  "1653c45a-3a9f-4df9-a8cc-a1a45b0fc5e6": {
+    "id": "1653c45a-3a9f-4df9-a8cc-a1a45b0fc5e6",
+    "title": "Estudar PAI III",
+    "date": "2023-05-15",
+    "description": "Estudee"
   }
 }

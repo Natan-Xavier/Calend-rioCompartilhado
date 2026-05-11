@@ -23,8 +23,15 @@ class StorageManager:
         return os.path.join(self.DATA_DIR, f"{resource}.json")
 
     def _read(self, resource):
-        with open(self._path(resource), "r", encoding="utf-8") as f:
-            return json.load(f)
+        path = self._path(resource)
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                content = f.read().strip()
+                if not content:
+                    return {}
+                return json.loads(content)
+        except (FileNotFoundError, json.JSONDecodeError):
+            return {}
 
     def _write(self, resource, data):
         with open(self._path(resource), "w", encoding="utf-8") as f:
@@ -73,3 +80,10 @@ class StorageManager:
 
     def exists(self, resource, key):
         return key in self._read(resource)
+
+    def find_by_name_global(self, name):
+        for resource in self.resources:
+            for item in self._read(resource).values():
+                if item.get("title", "").lower() == name.lower():
+                    return item, resource
+        return None, None

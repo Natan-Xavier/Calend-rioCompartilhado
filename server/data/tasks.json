@@ -1,32 +1,44 @@
 {
-  "df42bc87-b248-4a81-a2da-88f54dc7b20a": {
-    "id": "df42bc87-b248-4a81-a2da-88f54dc7b20a",
-    "title": "Estudar Teoria dos Grafos",
-    "description": "Estudar pra prox prova",
+  "3ca9523e-18c2-4189-af11-8f11438af263": {
+    "id": "3ca9523e-18c2-4189-af11-8f11438af263",
+    "title": "Implementar tela Qt",
+    "description": "Interface gráfica versão 2.0",
+    "date": "2026-05-19",
     "done": false
   },
-  "e65bfb5b-3600-4cf8-8f20-3f2244859188": {
-    "id": "e65bfb5b-3600-4cf8-8f20-3f2244859188",
-    "title": "Finalizar relatório",
-    "description": "Relatório Q2",
+  "a159917a-1943-4d92-bad9-6adaa7a5dc4a": {
+    "id": "a159917a-1943-4d92-bad9-6adaa7a5dc4a",
+    "title": "Revisar documentação",
+    "description": "Atualizar README e design patterns",
+    "date": "2026-05-21",
     "done": false
   },
-  "b3c18124-9a44-4fa7-91d8-1745681d410e": {
-    "id": "b3c18124-9a44-4fa7-91d8-1745681d410e",
-    "title": "Tarefa Listável",
-    "description": "Para listar",
+  "dd697941-5879-4a62-84af-a65cfa7ae3a0": {
+    "id": "dd697941-5879-4a62-84af-a65cfa7ae3a0",
+    "title": "Corrigir bugs do CLI",
+    "description": "Validações e mensagens de erro",
+    "date": "2026-05-22",
     "done": false
   },
-  "47e1f17b-faec-4d3e-96cf-2d89839cf559": {
-    "id": "47e1f17b-faec-4d3e-96cf-2d89839cf559",
-    "title": "Tarefa Editável",
-    "description": "Atualizada",
+  "27e40fc9-d55f-4bbe-941d-e6276e0dd68d": {
+    "id": "27e40fc9-d55f-4bbe-941d-e6276e0dd68d",
+    "title": "Preparar slides",
+    "description": "Apresentação final do projeto",
+    "date": "2026-05-25",
     "done": false
   },
-  "1bf2c9db-103f-41c3-8635-95d78b5119d8": {
-    "id": "1bf2c9db-103f-41c3-8635-95d78b5119d8",
-    "title": "Entregar projeto",
-    "description": "Projeto final",
+  "49662e9c-af30-4f4a-a2ca-ab45a8556353": {
+    "id": "49662e9c-af30-4f4a-a2ca-ab45a8556353",
+    "title": "Fazer testes de usabilidade",
+    "description": "Testar com usuários reais",
+    "date": "2026-05-26",
+    "done": false
+  },
+  "910a3760-95c9-4022-9457-f8e32a8af79e": {
+    "id": "910a3760-95c9-4022-9457-f8e32a8af79e",
+    "title": "Integracao testes",
+    "description": "integracao testes client/server",
+    "date": "2026-06-25",
     "done": false
   }
 }
