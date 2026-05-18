@@ -35,10 +35,10 @@ Este projeto foi desenvolvido aplicando padrões de projeto (Design Patterns) pa
 
 ## 👨‍💻 Equipe
 
-| Membro | GitHub |
-| Natan Xavier | @Natan-Xavier |
-| Pier Giorgio | @Pier-Cesar |
-| Guilherme Gomes | @Gomes-007 |
-| Haissa Mota | @hfontesdamota |
-| Paulo Alberto | @uepaullo |
+* | Membro | GitHub |
+* | Natan Xavier | @Natan-Xavier |
+* | Pier Giorgio | @Pier-Cesar |
+* | Guilherme Gomes | @Gomes-007 |
+* | Haissa Mota | @hfontesdamota |
+* | Paulo Alberto | @uepaullo |
 
