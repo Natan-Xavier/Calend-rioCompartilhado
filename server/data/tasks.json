@@ -1,44 +1,42 @@
 {
-  "3ca9523e-18c2-4189-af11-8f11438af263": {
-    "id": "3ca9523e-18c2-4189-af11-8f11438af263",
+  "0b708d55-0be5-4b3d-b091-1a9c5f091209": {
+    "id": "0b708d55-0be5-4b3d-b091-1a9c5f091209",
     "title": "Implementar tela Qt",
-    "description": "Interface gráfica versão 2.0",
+    "description": "Interface gráfica v2.0",
     "date": "2026-05-19",
-    "done": false
+    "done": false,
+    "created_by": "Ana Silva"
   },
-  "a159917a-1943-4d92-bad9-6adaa7a5dc4a": {
-    "id": "a159917a-1943-4d92-bad9-6adaa7a5dc4a",
+  "99db16f5-82dd-4df3-b03b-96107658096d": {
+    "id": "99db16f5-82dd-4df3-b03b-96107658096d",
     "title": "Revisar documentação",
     "description": "Atualizar README e design patterns",
     "date": "2026-05-21",
-    "done": false
+    "done": false,
+    "created_by": "Bruno Costa"
   },
-  "dd697941-5879-4a62-84af-a65cfa7ae3a0": {
-    "id": "dd697941-5879-4a62-84af-a65cfa7ae3a0",
+  "5cdbbba1-461c-4301-bb74-ebc9fe9f1fae": {
+    "id": "5cdbbba1-461c-4301-bb74-ebc9fe9f1fae",
     "title": "Corrigir bugs do CLI",
     "description": "Validações e mensagens de erro",
     "date": "2026-05-22",
-    "done": false
+    "done": false,
+    "created_by": "Carol Mendes"
   },
-  "27e40fc9-d55f-4bbe-941d-e6276e0dd68d": {
-    "id": "27e40fc9-d55f-4bbe-941d-e6276e0dd68d",
-    "title": "Preparar slides",
-    "description": "Apresentação final do projeto",
-    "date": "2026-05-25",
-    "done": false
-  },
-  "49662e9c-af30-4f4a-a2ca-ab45a8556353": {
-    "id": "49662e9c-af30-4f4a-a2ca-ab45a8556353",
-    "title": "Fazer testes de usabilidade",
+  "66d9b243-a2f0-4773-a4e8-b7d24d246209": {
+    "id": "66d9b243-a2f0-4773-a4e8-b7d24d246209",
+    "title": "Testes de usabilidade",
     "description": "Testar com usuários reais",
     "date": "2026-05-26",
-    "done": false
+    "done": false,
+    "created_by": "Bruno Costa"
   },
-  "910a3760-95c9-4022-9457-f8e32a8af79e": {
-    "id": "910a3760-95c9-4022-9457-f8e32a8af79e",
-    "title": "Integracao testes",
-    "description": "integracao testes client/server",
-    "date": "2026-06-25",
-    "done": false
+  "54dfa886-e00d-4232-8138-fabccd9e1b61": {
+    "id": "54dfa886-e00d-4232-8138-fabccd9e1b61",
+    "title": "Deploy do servidor",
+    "description": "Subir o servidor na rede da faculdade",
+    "date": "2026-06-03",
+    "done": false,
+    "created_by": "Carol Mendes"
   }
 }

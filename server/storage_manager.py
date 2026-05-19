@@ -87,3 +87,13 @@ class StorageManager:
                 if item.get("title", "").lower() == name.lower():
                     return item, resource
         return None, None
+
+    def find_by_name_and_date_global(self, name, date_str):
+        """Verifica se já existe item com mesmo nome E mesma data"""
+        for resource in self.resources:
+            for item in self._read(resource).values():
+                item_date = (item.get("date") or item.get("datetime", ""))[:10]
+                if (item.get("title", "").lower() == name.lower() and
+                        item_date == date_str[:10]):
+                    return item, resource
+        return None, None
