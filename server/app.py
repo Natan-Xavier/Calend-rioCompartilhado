@@ -9,10 +9,11 @@ calendar_service = CalendarService()
 task_service     = TaskService()
 
 
-# ── /usuarios ──────────────────────────────────────────
+# ── /usuarios ──────────────────────────────────────────────────────────────────
+
 @app.route("/usuarios", methods=["POST"])
 def create_user():
-    data   = request.get_json()
+    data = request.get_json()
     result, _ = calendar_service.create_user(data)
     return jsonify(result), 201
 
@@ -30,10 +31,11 @@ def delete_user(user_id):
     return jsonify(result), 200
 
 
-# ── /eventos ───────────────────────────────────────────
+# ── /eventos ───────────────────────────────────────────────────────────────────
+
 @app.route("/eventos", methods=["POST"])
 def create_event():
-    data         = request.get_json()
+    data = request.get_json()
     result, error = calendar_service.create_event(data)
     if error == "conflict":
         return jsonify({"error": f"Já existe um item com o nome '{data.get('title')}' nesta data"}), 409
@@ -42,7 +44,7 @@ def create_event():
 
 @app.route("/eventos/<name>", methods=["PUT"])
 def edit_event(name):
-    data   = request.get_json()
+    data = request.get_json()
     result = calendar_service.edit_event(name, data)
     if result is None:
         return jsonify({"error": "Evento não encontrado"}), 404
@@ -51,16 +53,18 @@ def edit_event(name):
 
 @app.route("/eventos/<name>", methods=["DELETE"])
 def delete_event(name):
-    result = calendar_service.delete_event(name)
+    deleted_by = request.args.get("deleted_by", "?")
+    result = calendar_service.delete_event(name, deleted_by)
     if result is None:
         return jsonify({"error": "Evento não encontrado"}), 404
     return jsonify(result), 200
 
 
-# ── /lembretes ─────────────────────────────────────────
+# ── /lembretes ─────────────────────────────────────────────────────────────────
+
 @app.route("/lembretes", methods=["POST"])
 def create_reminder():
-    data         = request.get_json()
+    data = request.get_json()
     result, error = calendar_service.create_reminder(data)
     if error == "conflict":
         return jsonify({"error": f"Já existe um item com o nome '{data.get('title')}' nesta data"}), 409
@@ -69,7 +73,7 @@ def create_reminder():
 
 @app.route("/lembretes/<name>", methods=["PUT"])
 def edit_reminder(name):
-    data   = request.get_json()
+    data = request.get_json()
     result = calendar_service.edit_reminder(name, data)
     if result is None:
         return jsonify({"error": "Lembrete não encontrado"}), 404
@@ -78,16 +82,18 @@ def edit_reminder(name):
 
 @app.route("/lembretes/<name>", methods=["DELETE"])
 def delete_reminder(name):
-    result = calendar_service.delete_reminder(name)
+    deleted_by = request.args.get("deleted_by", "?")
+    result = calendar_service.delete_reminder(name, deleted_by)
     if result is None:
         return jsonify({"error": "Lembrete não encontrado"}), 404
     return jsonify(result), 200
 
 
-# ── /tarefas ───────────────────────────────────────────
+# ── /tarefas ───────────────────────────────────────────────────────────────────
+
 @app.route("/tarefas", methods=["POST"])
 def add_task():
-    data         = request.get_json()
+    data = request.get_json()
     result, error = task_service.add(data)
     if error == "conflict":
         return jsonify({"error": f"Já existe um item com o nome '{data.get('title')}' nesta data"}), 409
@@ -101,7 +107,7 @@ def get_tasks():
 
 @app.route("/tarefas/<name>", methods=["PUT"])
 def edit_task(name):
-    data   = request.get_json()
+    data = request.get_json()
     result = task_service.edit(name, data)
     if result is None:
         return jsonify({"error": "Tarefa não encontrada"}), 404
@@ -110,13 +116,15 @@ def edit_task(name):
 
 @app.route("/tarefas/<name>", methods=["DELETE"])
 def delete_task(name):
-    result = task_service.delete(name)
+    deleted_by = request.args.get("deleted_by", "?")
+    result = task_service.delete(name, deleted_by)
     if result is None:
         return jsonify({"error": "Tarefa não encontrada"}), 404
     return jsonify(result), 200
 
 
-# ── /agenda ────────────────────────────────────────────
+# ── /agenda ────────────────────────────────────────────────────────────────────
+
 @app.route("/agenda", methods=["GET"])
 def get_agenda():
     start = request.args.get("start")
@@ -139,14 +147,23 @@ def get_agenda():
     return jsonify(agenda), 200
 
 
-# ── /find ──────────────────────────────────────────────
+# ── /find ──────────────────────────────────────────────────────────────────────
+
 @app.route("/find/<name>", methods=["GET"])
 def find_by_name(name):
-    storage        = StorageManager.get_instance()
+    storage = StorageManager.get_instance()
     item, resource = storage.find_by_name_global(name)
     if item is None:
         return jsonify({"error": "Item não encontrado"}), 404
     return jsonify({"item": item, "resource": resource}), 200
+
+
+# ── /historico ─────────────────────────────────────────────────────────────────
+
+@app.route("/historico", methods=["GET"])
+def get_history():
+    storage = StorageManager.get_instance()
+    return jsonify(storage.get_history()), 200
 
 
 if __name__ == "__main__":

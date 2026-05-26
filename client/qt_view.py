@@ -2,6 +2,7 @@ import sys
 import calendar
 import uuid
 import warnings
+from functools import partial
 from datetime import datetime, date, timedelta
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
@@ -1184,10 +1185,9 @@ class AgendaPanel(QWidget):
             bl.addStretch()
             rl.addWidget(bw, 1)
 
-            # Fixed: use different variable names to avoid closure bug with 'date' module
+            # Fixed: use partial to avoid closure/GC crash
             row.clicked.connect(
-                lambda _dn=day_n, _mn=mon, _yr=yr, _its=day_items:
-                self._open_day(_dn, _mn, _yr, _its)
+                partial(self._open_day, day_n, day_items, month=mon, year=yr)
             )
             self.content_vl.addWidget(row)
 
@@ -1237,8 +1237,7 @@ class AgendaPanel(QWidget):
                     cell._cell_layout.addWidget(more)
 
                 cell.cell_clicked.connect(
-                    lambda dn, its, m=self.curr_date.month, y=self.curr_date.year:
-                    self._open_day(dn, m, y, its)
+                    partial(self._open_day, month=self.curr_date.month, year=self.curr_date.year)
                 )
 
                 grid.addWidget(cell, r_idx + 1, c_idx)
@@ -1249,8 +1248,10 @@ class AgendaPanel(QWidget):
         gw.setLayout(grid)
         self.content_vl.addWidget(gw, 1)
 
-    def _open_day(self, day_num, month, year, items):
+    def _open_day(self, day_num, items, month=None, year=None):
         """Any day is clickable — empty or with items"""
+        month = month or self.curr_date.month
+        year  = year  or self.curr_date.year
         dlg    = DayDetailsDialog(day_num, month, year, items, self.proxy, self)
         result = dlg.exec_()
         if dlg.quick_added or (result == QDialog.Accepted and dlg.selected_item is None):
@@ -1267,21 +1268,53 @@ class AgendaPanel(QWidget):
             elif det.action == "DELETE":
                 self._handle_delete(item, res)
 
+    def _ownership_warning(self, item, verb):
+        """Returns True if user confirmed or is the owner."""
+        creator = item.get("created_by", "")
+        me      = getattr(self.proxy, "current_user", "")
+        if not creator or creator == me:
+            return True
+        warn = QDialog(self)
+        warn.setWindowTitle("Atenção")
+        warn.setFixedSize(400, 170)
+        warn.setStyleSheet(BASE_STYLE)
+        wl = QVBoxLayout(warn)
+        wl.setContentsMargins(24, 24, 24, 24)
+        wl.setSpacing(14)
+        msg = QLabel(f'Este item foi criado por <b>"{creator}"</b>.\nDeseja continuar {verb} assim mesmo?')
+        msg.setWordWrap(True)
+        msg.setStyleSheet(f"font-size: 13px; color: {TEXT};")
+        wl.addWidget(msg)
+        btns = QHBoxLayout()
+        cancel  = gcal_btn("Cancelar", small=True)
+        cancel.clicked.connect(warn.reject)
+        proceed = gcal_btn("Continuar", danger=True, small=True)
+        proceed.clicked.connect(warn.accept)
+        btns.addStretch()
+        btns.addWidget(cancel)
+        btns.addWidget(proceed)
+        wl.addLayout(btns)
+        return warn.exec_() == QDialog.Accepted
+
     def _handle_edit(self, item, resource):
+        if not self._ownership_warning(item, "editando"):
+            return
         dlg = EditDialog(item, resource, self)
         if dlg.exec_() != QDialog.Accepted:
             return
 
-        title = item["title"]
+        data              = dlg.result_data
+        data["edited_by"] = getattr(self.proxy, "current_user", "?")
+        title             = item["title"]
         if resource == "events":
-            _, s = self.proxy.edit_event(title, dlg.result_data)
+            _, s = self.proxy.edit_event(title, data)
         elif resource == "tasks":
-            _, s = self.proxy.edit_task(title, dlg.result_data)
+            _, s = self.proxy.edit_task(title, data)
         else:
-            _, s = self.proxy.edit_reminder(title, dlg.result_data)
+            _, s = self.proxy.edit_reminder(title, data)
 
         if s == 200 and dlg.edit_next and item.get("recurrence_id"):
-            self._edit_series(item, resource, dlg.result_data)
+            self._edit_series(item, resource, data)
 
         if s == 200:
             Toast("Item atualizado.", self.parent())
@@ -1303,7 +1336,6 @@ class AgendaPanel(QWidget):
                 item_date = (item.get("date") or item.get("datetime", ""))[:10]
                 if item_date <= cur_date:
                     continue
-                # Only update non-date fields to preserve each item's date
                 patch = {k: v for k, v in update_data.items()
                          if k not in ("date", "datetime")}
                 if not patch:
@@ -1318,6 +1350,8 @@ class AgendaPanel(QWidget):
             pass
 
     def _handle_delete(self, item, resource):
+        if not self._ownership_warning(item, "excluindo"):
+            return
         dlg = DeleteConfirmDialog(item["title"], self)
         if dlg.exec_() != QDialog.Accepted:
             return
@@ -1584,6 +1618,111 @@ class CreateReminderPanel(QWidget):
 
 
 # ──────────────────────────────────────────────
+# HistoryPanel
+# ──────────────────────────────────────────────
+
+class HistoryPanel(QWidget):
+    def __init__(self, proxy):
+        super().__init__()
+        self.proxy = proxy
+        self._init_ui()
+
+    def _init_ui(self):
+        self._layout = QVBoxLayout(self)
+        self._layout.setContentsMargins(0, 0, 0, 0)
+        self._layout.setSpacing(0)
+
+        # Top bar (same style as AgendaPanel)
+        topbar = QWidget()
+        topbar.setStyleSheet(f"background: {BG}; border-bottom: 1px solid {BORDER};")
+        tbl = QHBoxLayout(topbar)
+        tbl.setContentsMargins(16, 10, 16, 10)
+        tbl.setSpacing(8)
+        title = QLabel("Histórico de Ações")
+        title.setStyleSheet(f"font-size: 17px; font-weight: 600; color: {TEXT}; padding: 0 8px;")
+        tbl.addWidget(title)
+        tbl.addStretch()
+        refresh = gcal_btn("↻ Atualizar", small=True)
+        refresh.clicked.connect(self._load)
+        tbl.addWidget(refresh)
+        self._layout.addWidget(topbar)
+
+        self.scroll = QScrollArea()
+        self.scroll.setWidgetResizable(True)
+        self.scroll.setStyleSheet("border: none;")
+        self.container = QWidget()
+        self.container.setStyleSheet(f"background: {BG};")
+        self.cl = QVBoxLayout(self.container)
+        self.cl.setContentsMargins(16, 12, 16, 12)
+        self.cl.setSpacing(6)
+        self.scroll.setWidget(self.container)
+        self._layout.addWidget(self.scroll, 1)
+
+        self._load()
+
+    def _load(self):
+        while self.cl.count():
+            item = self.cl.takeAt(0)
+            if item.widget():
+                item.widget().deleteLater()
+
+        try:
+            entries, status = self.proxy.get_history()
+        except Exception:
+            entries, status = [], 503
+
+        if status != 200 or not entries:
+            lbl = QLabel("Nenhum registro encontrado.")
+            lbl.setAlignment(Qt.AlignCenter)
+            lbl.setStyleSheet(f"color: {TEXT_MUTED}; font-size: 14px; padding: 40px;")
+            self.cl.addWidget(lbl)
+            self.cl.addStretch()
+            return
+
+        ACTION_COLORS = {
+            "CRIOU":   (TAREFA_BG,   TAREFA_TEXT),
+            "EDITOU":  (EVENTO_BG,   EVENTO_TEXT),
+            "DELETOU": (LEMBRETE_BG, LEMBRETE_TEXT),
+        }
+
+        for entry in entries:
+            action   = entry.get("action", "")
+            bg, fg   = ACTION_COLORS.get(action, (BG_HOVER, TEXT))
+
+            row = QFrame()
+            row.setStyleSheet(f"background: {BG}; border: 1px solid {BORDER}; border-radius: 8px;")
+            rl = QHBoxLayout(row)
+            rl.setContentsMargins(14, 10, 14, 10)
+            rl.setSpacing(12)
+
+            badge = QLabel(f"  {action}  ")
+            badge.setStyleSheet(f"""
+                background: {bg}; color: {fg};
+                border-radius: 4px; font-size: 10px;
+                font-weight: 700; padding: 3px 8px; letter-spacing: 0.5px;
+            """)
+            rl.addWidget(badge)
+
+            info = QLabel(
+                f"<b>{entry.get('user', '?')}</b>  ·  "
+                f"{entry.get('item', '')}  "
+                f"<span style='color:{TEXT_MUTED}; font-size:11px;'>[{entry.get('type', '')}]</span>"
+                + (f"  <span style='color:{TEXT_MUTED}; font-size:11px;'>📅 {format_date_display(entry.get('item_date',''))}</span>"
+                   if entry.get('item_date') else "")
+            )
+            info.setStyleSheet(f"color: {TEXT};")
+            rl.addWidget(info, 1)
+
+            ts = QLabel(entry.get("timestamp", ""))
+            ts.setStyleSheet(f"color: {TEXT_MUTED}; font-size: 11px;")
+            rl.addWidget(ts)
+
+            self.cl.addWidget(row)
+
+        self.cl.addStretch()
+
+
+# ──────────────────────────────────────────────
 # MainWindow
 # ──────────────────────────────────────────────
 
@@ -1619,9 +1758,10 @@ class MainWindow(QMainWindow):
         self.nav_ev     = gcal_nav_btn("📆  Novo Evento")
         self.nav_ta     = gcal_nav_btn("📋  Nova Tarefa")
         self.nav_le     = gcal_nav_btn("🔔  Novo Lembrete")
+        self.nav_hist   = gcal_nav_btn("📝  Histórico")
         self.nav_agenda.setChecked(True)
 
-        for b in [self.nav_agenda, self.nav_ev, self.nav_ta, self.nav_le]:
+        for b in [self.nav_agenda, self.nav_ev, self.nav_ta, self.nav_le, self.nav_hist]:
             sl.addWidget(b)
 
         sl.addStretch()
@@ -1646,17 +1786,20 @@ class MainWindow(QMainWindow):
         # Stack
         self.stack    = QStackedWidget()
         self.agenda_p = AgendaPanel(self.proxy)
+        self.hist_p   = HistoryPanel(self.proxy)
         self.stack.addWidget(self.agenda_p)
         self.stack.addWidget(CreateEventPanel(self.proxy, self._go_agenda))
         self.stack.addWidget(CreateTaskPanel(self.proxy, self._go_agenda))
         self.stack.addWidget(CreateReminderPanel(self.proxy, self._go_agenda))
+        self.stack.addWidget(self.hist_p)
         root.addWidget(self.stack)
 
-        self._btns = [self.nav_agenda, self.nav_ev, self.nav_ta, self.nav_le]
+        self._btns = [self.nav_agenda, self.nav_ev, self.nav_ta, self.nav_le, self.nav_hist]
         self.nav_agenda.clicked.connect(lambda: self._nav(0))
         self.nav_ev.clicked.connect(lambda: self._nav(1))
         self.nav_ta.clicked.connect(lambda: self._nav(2))
         self.nav_le.clicked.connect(lambda: self._nav(3))
+        self.nav_hist.clicked.connect(lambda: self._nav(4))
 
     def _nav(self, i):
         self.stack.setCurrentIndex(i)
@@ -1664,6 +1807,8 @@ class MainWindow(QMainWindow):
             b.setChecked(idx == i)
         if i == 0:
             self.agenda_p._load_month()
+        elif i == 4:
+            self.hist_p._load()
 
     def _go_agenda(self):
         self._nav(0)
