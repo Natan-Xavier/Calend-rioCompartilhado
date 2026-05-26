@@ -21,18 +21,18 @@ class TaskService:
             "date":            data.get("date"),
             "done":            False,
             "created_by":      data.get("created_by", "Desconhecido"),
-            # FIX: persist recurrence fields so EditDialog shows the checkbox
+            # FIX: persist so EditDialog shows "edit next" checkbox
             "recurrence_id":   data.get("recurrence_id", ""),
             "recurrence_rule": data.get("recurrence_rule", ""),
         }
         self.storage.save("tasks", task_id, task)
-
         self.storage.log_action(
             data.get("created_by", "?"), "CRIOU",
             task["title"], "TAREFA",
             item_date=task.get("date", ""),
-            # dedup: only log once per recurrence series
             recurrence_id=task.get("recurrence_id", ""),
+            before={},
+            after=task,
         )
         return task, None
 
@@ -46,12 +46,16 @@ class TaskService:
         task, _ = self.storage.find_by_name_global(name)
         if not task:
             return None
+        before  = dict(task)
         updated = {**task, **data, "id": task["id"]}
         self.storage.update("tasks", task["id"], updated)
         self.storage.log_action(
             data.get("edited_by", "?"), "EDITOU",
             task["title"], "TAREFA",
             item_date=task.get("date", ""),
+            recurrence_id=task.get("recurrence_id", ""),
+            before=before,
+            after=updated,
         )
         return updated
 
@@ -63,6 +67,9 @@ class TaskService:
             deleted_by, "DELETOU",
             task["title"], "TAREFA",
             item_date=task.get("date", ""),
+            recurrence_id=task.get("recurrence_id", ""),
+            before=dict(task),
+            after={},
         )
         self.storage.delete("tasks", task["id"])
         return {"deleted": name, "created_by": task.get("created_by", "")}

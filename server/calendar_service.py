@@ -38,21 +38,22 @@ class CalendarService:
 
         event_id = str(uuid.uuid4())
         event = {
-            "id":               event_id,
-            "title":            data.get("title"),
-            "date":             data.get("date"),
-            "description":      data.get("description"),
-            "created_by":       data.get("created_by", "Desconhecido"),
-            "recurrence_id":    data.get("recurrence_id", ""),
-            "recurrence_rule":  data.get("recurrence_rule", ""),
+            "id":              event_id,
+            "title":           data.get("title"),
+            "date":            data.get("date"),
+            "description":     data.get("description"),
+            "created_by":      data.get("created_by", "Desconhecido"),
+            "recurrence_id":   data.get("recurrence_id", ""),
+            "recurrence_rule": data.get("recurrence_rule", ""),
         }
         self.storage.save("events", event_id, event)
-
         self.storage.log_action(
             data.get("created_by", "?"), "CRIOU",
             event["title"], "EVENTO",
             item_date=event.get("date", ""),
             recurrence_id=event.get("recurrence_id", ""),
+            before={},
+            after=event,
         )
         return event, None
 
@@ -60,12 +61,17 @@ class CalendarService:
         event, _ = self.storage.find_by_name_global(name)
         if not event:
             return None
+        before  = dict(event)
         updated = {**event, **data, "id": event["id"]}
         self.storage.update("events", event["id"], updated)
         self.storage.log_action(
             data.get("edited_by", "?"), "EDITOU",
             event["title"], "EVENTO",
             item_date=event.get("date", ""),
+            # Pass recurrence_id so edit-series only logs once
+            recurrence_id=event.get("recurrence_id", ""),
+            before=before,
+            after=updated,
         )
         return updated
 
@@ -77,6 +83,9 @@ class CalendarService:
             deleted_by, "DELETOU",
             event["title"], "EVENTO",
             item_date=event.get("date", ""),
+            recurrence_id=event.get("recurrence_id", ""),
+            before=dict(event),
+            after={},
         )
         self.storage.delete("events", event["id"])
         return {"deleted": name, "created_by": event.get("created_by", "")}
@@ -100,12 +109,13 @@ class CalendarService:
             "recurrence_rule": data.get("recurrence_rule", ""),
         }
         self.storage.save("reminders", reminder_id, reminder)
-
         self.storage.log_action(
             data.get("created_by", "?"), "CRIOU",
             reminder["title"], "LEMBRETE",
             item_date=reminder.get("datetime", ""),
             recurrence_id=reminder.get("recurrence_id", ""),
+            before={},
+            after=reminder,
         )
         return reminder, None
 
@@ -113,12 +123,16 @@ class CalendarService:
         reminder, _ = self.storage.find_by_name_global(name)
         if not reminder:
             return None
+        before  = dict(reminder)
         updated = {**reminder, **data, "id": reminder["id"]}
         self.storage.update("reminders", reminder["id"], updated)
         self.storage.log_action(
             data.get("edited_by", "?"), "EDITOU",
             reminder["title"], "LEMBRETE",
             item_date=reminder.get("datetime", ""),
+            recurrence_id=reminder.get("recurrence_id", ""),
+            before=before,
+            after=updated,
         )
         return updated
 
@@ -130,6 +144,9 @@ class CalendarService:
             deleted_by, "DELETOU",
             reminder["title"], "LEMBRETE",
             item_date=reminder.get("datetime", ""),
+            recurrence_id=reminder.get("recurrence_id", ""),
+            before=dict(reminder),
+            after={},
         )
         self.storage.delete("reminders", reminder["id"])
         return {"deleted": name, "created_by": reminder.get("created_by", "")}

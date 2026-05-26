@@ -1,0 +1,211 @@
+{
+  "87e9b5a3-f9cb-429a-9ceb-3434c5d12f09": {
+    "id": "87e9b5a3-f9cb-429a-9ceb-3434c5d12f09",
+    "timestamp": "26/05/2026 16:06",
+    "user": "Paulo Alberto",
+    "action": "EDITOU",
+    "item": "test",
+    "type": "EVENTO",
+    "item_date": "2026-05-28",
+    "recurrence_id": "fa89163e-4764-45b9-811a-36cdaa743287",
+    "before": {
+      "id": "a078dc9e-955f-413e-8f05-f260f6b75832",
+      "title": "test",
+      "date": "2026-05-28",
+      "description": "-",
+      "created_by": "Nathan Xavier",
+      "recurrence_id": "fa89163e-4764-45b9-811a-36cdaa743287",
+      "recurrence_rule": "DIARIO"
+    },
+    "after": {
+      "id": "a078dc9e-955f-413e-8f05-f260f6b75832",
+      "title": "testnovohistorico",
+      "date": "2026-06-24",
+      "description": "testadinho",
+      "created_by": "Nathan Xavier",
+      "recurrence_id": "fa89163e-4764-45b9-811a-36cdaa743287",
+      "recurrence_rule": "DIARIO",
+      "edited_by": "Paulo Alberto"
+    }
+  },
+  "06d7fd41-dd92-4b64-bc84-7bbe1f61bb66": {
+    "id": "06d7fd41-dd92-4b64-bc84-7bbe1f61bb66",
+    "timestamp": "26/05/2026 16:07",
+    "user": "Paulo Alberto",
+    "action": "CRIOU",
+    "item": "novaaoaoaoa",
+    "type": "EVENTO",
+    "item_date": "2026-05-26",
+    "recurrence_id": "618f6145-34a3-43b8-a8a2-48ac08b88f82",
+    "before": {},
+    "after": {
+      "id": "539404ba-8d4d-40b4-8810-718df5ea743f",
+      "title": "novaaoaoaoa",
+      "date": "2026-05-26",
+      "description": "dadada",
+      "created_by": "Paulo Alberto",
+      "recurrence_id": "618f6145-34a3-43b8-a8a2-48ac08b88f82",
+      "recurrence_rule": "DIARIO"
+    }
+  },
+  "141dd031-5365-4782-a085-0c09d138bb15": {
+    "id": "141dd031-5365-4782-a085-0c09d138bb15",
+    "timestamp": "26/05/2026 16:07",
+    "user": "Paulo Alberto",
+    "action": "EDITOU",
+    "item": "novaaoaoaoa",
+    "type": "EVENTO",
+    "item_date": "2026-05-26",
+    "recurrence_id": "618f6145-34a3-43b8-a8a2-48ac08b88f82",
+    "before": {
+      "id": "539404ba-8d4d-40b4-8810-718df5ea743f",
+      "title": "novaaoaoaoa",
+      "date": "2026-05-26",
+      "description": "dadada",
+      "created_by": "Paulo Alberto",
+      "recurrence_id": "618f6145-34a3-43b8-a8a2-48ac08b88f82",
+      "recurrence_rule": "DIARIO"
+    },
+    "after": {
+      "id": "539404ba-8d4d-40b4-8810-718df5ea743f",
+      "title": "teclado",
+      "date": "2026-05-26",
+      "description": "dadada",
+      "created_by": "Paulo Alberto",
+      "recurrence_id": "618f6145-34a3-43b8-a8a2-48ac08b88f82",
+      "recurrence_rule": "DIARIO",
+      "edited_by": "Paulo Alberto"
+    }
+  },
+  "0a13cfd7-00f0-4e5b-92a2-edb3b10ef61d": {
+    "id": "0a13cfd7-00f0-4e5b-92a2-edb3b10ef61d",
+    "timestamp": "26/05/2026 16:08",
+    "user": "Paulo Alberto",
+    "action": "DELETOU",
+    "item": "teclado",
+    "type": "EVENTO",
+    "item_date": "2026-05-26",
+    "recurrence_id": "618f6145-34a3-43b8-a8a2-48ac08b88f82",
+    "before": {
+      "id": "539404ba-8d4d-40b4-8810-718df5ea743f",
+      "title": "teclado",
+      "date": "2026-05-26",
+      "description": "dadada",
+      "created_by": "Paulo Alberto",
+      "recurrence_id": "618f6145-34a3-43b8-a8a2-48ac08b88f82",
+      "recurrence_rule": "DIARIO",
+      "edited_by": "Paulo Alberto"
+    },
+    "after": {}
+  },
+  "fec2f169-6551-4f96-82cc-724ba731baf6": {
+    "id": "fec2f169-6551-4f96-82cc-724ba731baf6",
+    "timestamp": "26/05/2026 16:09",
+    "user": "Paulo Alberto",
+    "action": "DELETOU",
+    "item": "test",
+    "type": "EVENTO",
+    "item_date": "2026-05-30",
+    "recurrence_id": "fa89163e-4764-45b9-811a-36cdaa743287",
+    "before": {
+      "id": "0027660b-f4d7-4ac6-bb47-2dc855f6b017",
+      "title": "test",
+      "date": "2026-05-30",
+      "description": "-",
+      "created_by": "Nathan Xavier",
+      "recurrence_id": "fa89163e-4764-45b9-811a-36cdaa743287",
+      "recurrence_rule": "DIARIO"
+    },
+    "after": {}
+  },
+  "c48609eb-7a57-4d7b-ae10-71084e75da0b": {
+    "id": "c48609eb-7a57-4d7b-ae10-71084e75da0b",
+    "timestamp": "26/05/2026 16:09",
+    "user": "Paulo Alberto",
+    "action": "EDITOU",
+    "item": "Churrasco na casa do Nathan",
+    "type": "EVENTO",
+    "item_date": "2026-05-31",
+    "recurrence_id": "",
+    "before": {
+      "id": "f63460cb-f66e-4baf-93c5-587203e722f6",
+      "title": "Churrasco na casa do Nathan",
+      "date": "2026-05-31",
+      "description": "Levar picanha e cachaca",
+      "created_by": "Pier Cesar"
+    },
+    "after": {
+      "id": "f63460cb-f66e-4baf-93c5-587203e722f6",
+      "title": "Churrasco na casa do Nathan",
+      "date": "2026-06-30",
+      "description": "Levar picanha e cachaca",
+      "created_by": "Pier Cesar",
+      "edited_by": "Paulo Alberto"
+    }
+  },
+  "2edec59d-75eb-49c2-bbf1-0ad05f08d905": {
+    "id": "2edec59d-75eb-49c2-bbf1-0ad05f08d905",
+    "timestamp": "26/05/2026 16:10",
+    "user": "Paulo Alberto",
+    "action": "CRIOU",
+    "item": "DBD",
+    "type": "EVENTO",
+    "item_date": "2026-06-20",
+    "recurrence_id": "7d581733-c351-46b6-b6da-421a43eab303",
+    "before": {},
+    "after": {
+      "id": "6324a114-676e-4d78-8a63-1b77641b5176",
+      "title": "DBD",
+      "date": "2026-06-20",
+      "description": "dadasdad",
+      "created_by": "Paulo Alberto",
+      "recurrence_id": "7d581733-c351-46b6-b6da-421a43eab303",
+      "recurrence_rule": "DIARIO"
+    }
+  },
+  "0bc32578-53fd-40c8-99a6-cff188e43495": {
+    "id": "0bc32578-53fd-40c8-99a6-cff188e43495",
+    "timestamp": "26/05/2026 16:10",
+    "user": "Paulo Alberto",
+    "action": "CRIOU",
+    "item": "adada",
+    "type": "EVENTO",
+    "item_date": "2026-06-30",
+    "recurrence_id": "",
+    "before": {},
+    "after": {
+      "id": "8aa3e323-86ef-4d39-a75b-d55e7f7196d6",
+      "title": "adada",
+      "date": "2026-06-30",
+      "description": "dadaad",
+      "created_by": "Paulo Alberto",
+      "recurrence_id": "",
+      "recurrence_rule": ""
+    }
+  },
+  "3168c2e6-0e63-477f-bdd7-32e20695415b": {
+    "id": "3168c2e6-0e63-477f-bdd7-32e20695415b",
+    "timestamp": "26/05/2026 16:21",
+    "user": "Paulo Alberto",
+    "action": "EDITOU",
+    "item": "AP II - Paradigmas de programacao",
+    "type": "EVENTO",
+    "item_date": "2026-05-20",
+    "recurrence_id": "",
+    "before": {
+      "id": "ad4b718c-25ac-4b75-8832-3815188b01e0",
+      "title": "AP II - Paradigmas de programacao",
+      "date": "2026-05-20",
+      "description": "-",
+      "created_by": "Pier Cesar"
+    },
+    "after": {
+      "id": "ad4b718c-25ac-4b75-8832-3815188b01e0",
+      "title": "AP II - Paradigmas De Programacao",
+      "date": "2026-05-20",
+      "description": "-",
+      "created_by": "Pier Cesar",
+      "edited_by": "Paulo Alberto"
+    }
+  }
+}

@@ -1616,6 +1616,172 @@ class CreateReminderPanel(QWidget):
             self.err_lbl.setText(f"{errors} datas com conflito foram ignoradas.")
             self.on_success()
 
+# ──────────────────────────────────────────────
+# HistoryDetailDialog
+# ──────────────────────────────────────────────
+
+class HistoryDetailDialog(QDialog):
+    def __init__(self, entry, parent=None):
+        super().__init__(parent)
+        self.entry = entry
+        action = entry.get("action", "")
+        self.setWindowTitle(f"Histórico — {action}")
+        self.setFixedSize(520, 460)
+        self.setStyleSheet(BASE_STYLE)
+        self._build()
+
+    def _build(self):
+        self._layout = QVBoxLayout(self)
+        self._layout.setContentsMargins(0, 0, 0, 0)
+
+        # ── Colored header ────────────────────────────────────────────────────
+        action = self.entry.get("action", "")
+        ACTION_COLORS = {
+            "CRIOU": (TAREFA_BG, TAREFA_TEXT),
+            "EDITOU": (EVENTO_BG, EVENTO_TEXT),
+            "DELETOU": (LEMBRETE_BG, LEMBRETE_TEXT),
+        }
+        bg, fg = ACTION_COLORS.get(action, (BG_HOVER, TEXT))
+
+        header = QWidget()
+        header.setStyleSheet(f"background: {bg};")
+        hl = QHBoxLayout(header)
+        hl.setContentsMargins(20, 14, 20, 14)
+
+        action_lbl = QLabel(action)
+        action_lbl.setStyleSheet(
+            f"color: {fg}; font-size: 11px; font-weight: 700; letter-spacing: 1px;")
+        hl.addWidget(action_lbl)
+        hl.addStretch()
+
+        ts = QLabel(self.entry.get("timestamp", ""))
+        ts.setStyleSheet(f"color: {TEXT_MUTED}; font-size: 11px;")
+        hl.addWidget(ts)
+        self._layout.addWidget(header)
+
+        # ── Meta info ─────────────────────────────────────────────────────────
+        meta = QWidget()
+        ml = QVBoxLayout(meta)
+        ml.setContentsMargins(20, 12, 20, 6)
+        ml.setSpacing(4)
+
+        item_name = QLabel(self.entry.get("item", ""))
+        item_name.setStyleSheet(f"font-size: 17px; font-weight: 700; color: {TEXT};")
+        ml.addWidget(item_name)
+
+        row = QHBoxLayout()
+        user_lbl = QLabel(f"👤  {self.entry.get('user', '?')}")
+        user_lbl.setStyleSheet(f"color: {TEXT_MUTED}; font-size: 12px;")
+        row.addWidget(user_lbl)
+
+        item_date = self.entry.get("item_date", "")
+        if item_date:
+            date_lbl = QLabel(f"📅  {format_date_display(item_date)}")
+            date_lbl.setStyleSheet(f"color: {TEXT_MUTED}; font-size: 12px;")
+            row.addWidget(date_lbl)
+
+        tipo_lbl = QLabel(f"[{self.entry.get('type', '')}]")
+        tipo_lbl.setStyleSheet(f"color: {TEXT_MUTED}; font-size: 12px;")
+        row.addWidget(tipo_lbl)
+        row.addStretch()
+        ml.addLayout(row)
+        self._layout.addWidget(meta)
+        self._layout.addWidget(h_sep())
+
+        # ── Before / After ────────────────────────────────────────────────────
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll.setStyleSheet("border: none;")
+        container = QWidget()
+        cl = QVBoxLayout(container)
+        cl.setContentsMargins(20, 12, 20, 12)
+        cl.setSpacing(12)
+
+        before = self.entry.get("before", {})
+        after = self.entry.get("after", {})
+
+        if action == "CRIOU":
+            cl.addWidget(self._snapshot_widget("Item criado", after, TAREFA_BG, TAREFA_TEXT))
+
+        elif action == "DELETOU":
+            cl.addWidget(self._snapshot_widget("Item excluído", before, LEMBRETE_BG, LEMBRETE_TEXT))
+
+        elif action == "EDITOU":
+            cl.addWidget(self._snapshot_widget("Antes", before, BG_HOVER, TEXT_MUTED))
+            arrow = QLabel("▼  alterado para")
+            arrow.setAlignment(Qt.AlignCenter)
+            arrow.setStyleSheet(f"color: {TEXT_MUTED}; font-size: 11px;")
+            cl.addWidget(arrow)
+            cl.addWidget(self._snapshot_widget("Depois", after, EVENTO_BG, EVENTO_TEXT))
+
+        cl.addStretch()
+        scroll.setWidget(container)
+        self._layout.addWidget(scroll, 1)
+
+        # ── Footer ────────────────────────────────────────────────────────────
+        footer = QWidget()
+        footer.setStyleSheet(f"border-top: 1px solid {BORDER};")
+        fl = QHBoxLayout(footer)
+        fl.setContentsMargins(16, 8, 16, 8)
+        close = gcal_btn("Fechar", small=True)
+        close.clicked.connect(self.reject)
+        fl.addStretch()
+        fl.addWidget(close)
+        self._layout.addWidget(footer)
+
+    def _snapshot_widget(self, label, snapshot, bg, fg):
+        frame = QFrame()
+        frame.setStyleSheet(
+            f"background: {bg}; border-radius: 6px; border: none;")
+        fl = QVBoxLayout(frame)
+        fl.setContentsMargins(14, 12, 14, 12)
+        fl.setSpacing(6)
+
+        lbl = QLabel(label.upper())
+        lbl.setStyleSheet(
+            f"color: {fg}; font-size: 10px; font-weight: 700; letter-spacing: 1px;")
+        fl.addWidget(lbl)
+        fl.addWidget(self._hsep_frame())
+
+        FIELD_LABELS = {
+            "title": "Título",
+            "description": "Descrição",
+            "date": "Data",
+            "datetime": "Data/Hora",
+            "created_by": "Criado por",
+            "recurrence_rule": "Recorrência",
+        }
+        SKIP = {"id", "done", "recurrence_id", "type"}
+
+        if not snapshot:
+            fl.addWidget(QLabel("—"))
+            return frame
+
+        for key, field_label in FIELD_LABELS.items():
+            val = snapshot.get(key)
+            if val is None or val == "" or key in SKIP:
+                continue
+            if key in ("date", "datetime"):
+                val = format_date_display(str(val))
+            row = QHBoxLayout()
+            k_lbl = QLabel(f"{field_label}:")
+            k_lbl.setStyleSheet(f"color: {fg}; font-size: 11px; font-weight: 600; min-width: 90px;")
+            v_lbl = QLabel(str(val))
+            v_lbl.setStyleSheet(f"color: {TEXT}; font-size: 12px;")
+            v_lbl.setWordWrap(True)
+            row.addWidget(k_lbl)
+            row.addWidget(v_lbl, 1)
+            fl.addLayout(row)
+
+        return frame
+
+    @staticmethod
+    def _hsep_frame():
+        f = QFrame()
+        f.setFrameShape(QFrame.HLine)
+        f.setStyleSheet(f"border: none; max-height: 1px; background: rgba(0,0,0,0.08);")
+        return f
+
 
 # ──────────────────────────────────────────────
 # HistoryPanel
@@ -1632,16 +1798,19 @@ class HistoryPanel(QWidget):
         self._layout.setContentsMargins(0, 0, 0, 0)
         self._layout.setSpacing(0)
 
-        # Top bar (same style as AgendaPanel)
+        # Top bar — same style as AgendaPanel
         topbar = QWidget()
         topbar.setStyleSheet(f"background: {BG}; border-bottom: 1px solid {BORDER};")
         tbl = QHBoxLayout(topbar)
         tbl.setContentsMargins(16, 10, 16, 10)
         tbl.setSpacing(8)
+
         title = QLabel("Histórico de Ações")
-        title.setStyleSheet(f"font-size: 17px; font-weight: 600; color: {TEXT}; padding: 0 8px;")
+        title.setStyleSheet(
+            f"font-size: 17px; font-weight: 600; color: {TEXT}; padding: 0 8px;")
         tbl.addWidget(title)
         tbl.addStretch()
+
         refresh = gcal_btn("↻ Atualizar", small=True)
         refresh.clicked.connect(self._load)
         tbl.addWidget(refresh)
@@ -1674,27 +1843,33 @@ class HistoryPanel(QWidget):
         if status != 200 or not entries:
             lbl = QLabel("Nenhum registro encontrado.")
             lbl.setAlignment(Qt.AlignCenter)
-            lbl.setStyleSheet(f"color: {TEXT_MUTED}; font-size: 14px; padding: 40px;")
+            lbl.setStyleSheet(
+                f"color: {TEXT_MUTED}; font-size: 14px; padding: 40px;")
             self.cl.addWidget(lbl)
             self.cl.addStretch()
             return
 
         ACTION_COLORS = {
-            "CRIOU":   (TAREFA_BG,   TAREFA_TEXT),
-            "EDITOU":  (EVENTO_BG,   EVENTO_TEXT),
+            "CRIOU": (TAREFA_BG, TAREFA_TEXT),
+            "EDITOU": (EVENTO_BG, EVENTO_TEXT),
             "DELETOU": (LEMBRETE_BG, LEMBRETE_TEXT),
         }
 
         for entry in entries:
-            action   = entry.get("action", "")
-            bg, fg   = ACTION_COLORS.get(action, (BG_HOVER, TEXT))
+            action = entry.get("action", "")
+            bg, fg = ACTION_COLORS.get(action, (BG_HOVER, TEXT))
 
-            row = QFrame()
-            row.setStyleSheet(f"background: {BG}; border: 1px solid {BORDER}; border-radius: 8px;")
+            row = ClickableFrame()
+            row.setCursor(Qt.PointingHandCursor)
+            row.setStyleSheet(f"""
+                QFrame {{ background: {BG}; border: 1px solid {BORDER}; border-radius: 8px; }}
+                QFrame:hover {{ background: {BG_HOVER}; border-color: {ACCENT}; }}
+            """)
             rl = QHBoxLayout(row)
             rl.setContentsMargins(14, 10, 14, 10)
             rl.setSpacing(12)
 
+            # Action badge
             badge = QLabel(f"  {action}  ")
             badge.setStyleSheet(f"""
                 background: {bg}; color: {fg};
@@ -1703,23 +1878,38 @@ class HistoryPanel(QWidget):
             """)
             rl.addWidget(badge)
 
+            # Item info
+            item_date = entry.get("item_date", "")
+            date_str = f"  📅 {format_date_display(item_date)}" if item_date else ""
             info = QLabel(
                 f"<b>{entry.get('user', '?')}</b>  ·  "
                 f"{entry.get('item', '')}  "
-                f"<span style='color:{TEXT_MUTED}; font-size:11px;'>[{entry.get('type', '')}]</span>"
-                + (f"  <span style='color:{TEXT_MUTED}; font-size:11px;'>📅 {format_date_display(entry.get('item_date',''))}</span>"
-                   if entry.get('item_date') else "")
+                f"<span style='color:{TEXT_MUTED}; font-size:11px;'>"
+                f"[{entry.get('type', '')}]{date_str}</span>"
             )
             info.setStyleSheet(f"color: {TEXT};")
             rl.addWidget(info, 1)
 
+            # Timestamp + click hint
+            right = QVBoxLayout()
+            right.setSpacing(2)
             ts = QLabel(entry.get("timestamp", ""))
             ts.setStyleSheet(f"color: {TEXT_MUTED}; font-size: 11px;")
-            rl.addWidget(ts)
+            right.addWidget(ts, alignment=Qt.AlignRight)
+            hint = QLabel("Ver detalhes →")
+            hint.setStyleSheet(f"color: {ACCENT}; font-size: 10px;")
+            right.addWidget(hint, alignment=Qt.AlignRight)
+            rl.addLayout(right)
 
+            # Clickable — open detail dialog
+            row.clicked.connect(partial(self._open_detail, entry))
             self.cl.addWidget(row)
 
         self.cl.addStretch()
+
+    def _open_detail(self, entry):
+        dlg = HistoryDetailDialog(entry, self)
+        dlg.exec_()
 
 
 # ──────────────────────────────────────────────

@@ -68,7 +68,6 @@ class StorageManager:
         return None, None
 
     def find_by_name_and_date_global(self, name, date_str):
-        """Returns (item, resource) if same title AND same date already exists."""
         for resource in ["events", "reminders", "tasks"]:
             for item in self._read(resource).values():
                 item_date = (item.get("date") or item.get("datetime", ""))[:10]
@@ -97,11 +96,12 @@ class StorageManager:
         return key in self._read(resource)
 
     def log_action(self, user, action, item_title, item_type,
-                   item_date="", recurrence_id=""):
+                   item_date="", recurrence_id="",
+                   before=None, after=None):
         """
-        Log an action to history.
-        If recurrence_id is set, only logs ONCE for the whole series
-        (deduplicates by recurrence_id + action).
+        Log an action. If recurrence_id is provided, only ONE entry is created
+        for the whole series (subsequent calls with same recurrence_id+action are skipped).
+        before/after are item snapshots for the history detail dialog.
         """
         if recurrence_id:
             for entry in self._read("history").values():
@@ -119,6 +119,8 @@ class StorageManager:
             "type":          item_type,
             "item_date":     item_date[:10] if item_date else "",
             "recurrence_id": recurrence_id,
+            "before":        before or {},
+            "after":         after  or {},
         }
         self.save("history", entry_id, entry)
         return entry
