@@ -208,22 +208,6 @@ Os testes rodam automaticamente a cada push no GitHub.
 
 ---
 
-## 13. Contribuindo com o projeto
-
-### Pegar atualizações dos colegas:
-```
-git pull
-```
-
-### Enviar suas alterações:
-```
-git add .
-git commit -m "sua mensagem aqui"
-git push
-```
-
----
-
 ## Resumo rápido
 
 | O que fazer | Comando |
